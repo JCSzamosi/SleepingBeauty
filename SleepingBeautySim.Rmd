@@ -1,0 +1,47 @@
+Sleeping Beauty Problem Simulation
+==================================
+
+```{r}
+library(tidyverse)
+```
+
+### We flip a fair coin
+
+```{r}
+flips = sample(c('heads','tails'), 1000, replace = TRUE)
+df = data.frame(Coins = factor(flips, levels = c('heads','tails')), 
+                Label = 'Coins')
+ggplot(df, aes(Label, colour = Coins, fill = Coins)) +
+    geom_bar(stat = 'count') +
+    scale_colour_brewer(palette = 'Set1') +
+    scale_fill_brewer(palette = 'Set1')
+```
+
+### We wake her up
+
+If the coin comes up heads, we wake her up once. If the coin comes up tails,
+we wake her up twice.
+
+```{r}
+checks = c()
+
+for (flip in flips){
+    if (flip == 'heads'){
+        checks = c(checks, 'heads')
+    } else if (flip == 'tails') {
+        checks = c(checks, 'tails')
+        checks = c(checks, 'tails')
+    }
+}
+
+res = data.frame(Results = factor(checks, levels = c('heads','tails')),
+                 Label = 'Results')
+ggplot(res, aes(Label, colour = Results, fill = Results)) +
+    geom_bar(stat = 'count') +
+    scale_colour_brewer(palette = 'Set1') +
+    scale_fill_brewer(palette = 'Set1')
+```
+
+The crucial piece here is that there are 1000 coin tosses, but 1500 wake up 
+events. This is why when we wake her up there is a 2/3 chance the coin was 
+tails, even though the coin is fair.
